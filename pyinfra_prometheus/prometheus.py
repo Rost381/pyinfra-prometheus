@@ -3,7 +3,7 @@
 # Desc: installs/configures prometheus as a systemd service using pyinfra
 
 from pyinfra.api import deploy, DeployError
-from pyinfra.operations import files, init, server
+from pyinfra.operations import files, sysvinit, systemd, server
 
 from .defaults import DEFAULTS
 from .util import get_template_path
@@ -114,7 +114,7 @@ def configure_prometheus(state, host, enable_service=True, extra_args=None):
             host=host,
         )
         # Start (/enable) the prometheus service
-        init.systemd(
+        systemd.service(
             name=op_name,
             service='prometheus',
             running=True,
@@ -142,7 +142,7 @@ def configure_prometheus(state, host, enable_service=True, extra_args=None):
             host=host,
         )
         # Start (/enable) the prometheus service
-        init.d(
+        sysvinit.service(
             name=op_name,
             service='prometheus',
             running=True,

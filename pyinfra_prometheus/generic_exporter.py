@@ -3,7 +3,7 @@
 # Desc: installs/configures node_exporter as a systemd service using pyinfra
 
 from pyinfra.api import deploy
-from pyinfra.operations import files, init, server
+from pyinfra.operations import files, sysvinit, systemd, server
 
 from .defaults import DEFAULTS
 from .util import get_template_path
@@ -104,7 +104,7 @@ def configure_exporter(
             host=host,
         )
 
-        init.systemd(
+        systemd.service(
             name=op_name,
             service=ex_bin_name,
             running=True,
@@ -131,7 +131,7 @@ def configure_exporter(
         )
 
         # Start (/enable) the prometheus service
-        init.d(
+        sysvinit.service(
             name=op_name,
             service=ex_name,
             running=True,
